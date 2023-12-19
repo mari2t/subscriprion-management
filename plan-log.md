@@ -8,21 +8,28 @@
 
 ## DB設計
 
-### サブスクリプションDB
+### サブスクリプションテーブル
 
-1. サブスクリプション名
-2. サブスクリプションを登録した日付
-3. サブスクリプションの利用料金
-4. サブスクリプションの課金頻度
-5. サブスクリプションの課金状況がわかるURL
-6. （できたら）サブスクリプションが一目でわかるスクリーンショット
+| FiledName     | DataType  | Extra      |
+| ------------- | --------- | ---------- |
+| id            | number    | ID         |
+| name          | string    | サブスク名 |
+| overview      | string    | 概要       |
+| contracted_at | timestamp | 登録した日 |
+| fee           | number    | 料金       |
+| frequency     | number    | 課金頻度   |
+| url           | string    | 課金URL    |
+| image         | string    | 画像       |
 
-### 感想DB
+### 感想テーブル
 
-1. サブスクリプションのタイトル
-2. 感想投稿日
-3. 感想
-4. レーティングの数値
+| FiledName     | DataType  | Extra                  |
+| ------------- | --------- | ---------------------- |
+| impression_id | number    | ID                     |
+| name          | string    | サブスク名             |
+| comment       | string    | 感想                   |
+| rating        | number    | レイティング（５段階） |
+| posted_at     | timestamp | 投稿した日             |
 
 ## やらないこと
 
