@@ -10,26 +10,28 @@
 
 ### サブスクリプションテーブル
 
-| FiledName     | DataType  | Extra      |
-| ------------- | --------- | ---------- |
-| id            | number    | ID         |
-| name          | string    | サブスク名 |
-| overview      | string    | 概要       |
-| contracted_at | timestamp | 登録した日 |
-| fee           | number    | 料金       |
-| frequency     | number    | 課金頻度   |
-| url           | string    | 課金URL    |
-| image         | string    | 画像       |
+| FiledName     | DataType  | Extra                    |
+| ------------- | --------- | ------------------------ |
+| id            | number    | サブスクテーブルID       |
+| name          | string    | サブスク名               |
+| overview      | string    | 概要                     |
+| fee           | number    | 料金                     |
+| frequency     | number    | 課金頻度                 |
+| url           | string    | 課金URL                  |
+| contracted_at | timestamp | 課金開始日               |
+| updated_at    | timestamp | サブスク情報を更新した日 |
+| image         | string    | 画像                     |
 
 ### 感想テーブル
 
 | FiledName     | DataType  | Extra                  |
 | ------------- | --------- | ---------------------- |
-| impression_id | number    | ID                     |
-| name          | string    | サブスク名             |
+| impression_id | number    | 感想テーブルID         |
+| id            | number    | サブスクテーブルID     |
 | comment       | string    | 感想                   |
 | rating        | number    | レイティング（５段階） |
 | posted_at     | timestamp | 投稿した日             |
+| edited_at     | timestamp | 編集した日             |
 
 ## やらないこと
 
