@@ -10,15 +10,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([name])
-}
-
 model Subscription {
     id            Int      @id @default(autoincrement())
     name          String
@@ -35,13 +26,12 @@ model Subscription {
 }
 
 model Impression {
-    impression_id  Int      @id @default(autoincrement())
-    subscriptionId Int // サブスクリプションテーブルID
-    comment        String
-    rating         Int
-    posted_at      DateTime @default(now())
-    edited_at      DateTime @updatedAt
+    impression_id   Int      @id @default(autoincrement())
+    subscription_id Int // サブスクリプションテーブルID
+    comment         String
+    rating          Int
+    posted_at       DateTime @default(now())
 
     // サブスクリプションテーブルへのリレーション
-    subscription Subscription @relation(fields: [subscriptionId], references: [id])
+    subscription Subscription @relation(fields: [subscription_id], references: [id])
 }

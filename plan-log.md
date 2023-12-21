@@ -31,7 +31,6 @@
 | comment       | string    | 感想                   |
 | rating        | number    | レイティング（５段階） |
 | posted_at     | timestamp | 投稿した日             |
-| edited_at     | timestamp | 編集した日             |
 
 ## やらないこと
 
