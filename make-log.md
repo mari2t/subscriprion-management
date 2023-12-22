@@ -1,5 +1,14 @@
 # make-log
 
+## 2023/12/22
+
+1. prismaのスキーマに1行追加したらマイグレーションでエラー。
+   既存のデータを削除したらマイグレーションできた。
+2. DBに登録できないエラー。billingIntervalRef.current.valueがstringだった。
+3. 1時間くらいDB登録できなくて悩んでいたけど解決。
+   ChatGPTにコード入れたりして修正している間に契約URL入力欄がなくなっていて
+   urlRef.currentが無かった…。
+
 ## 2023/12/21
 
 1. prismaのブラウザ確認。npx prisma studio

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useRef } from "react";
 import Link from "next/link";
 import { api } from "~/utils/api";
 import { useRouter } from "next/navigation";
@@ -7,10 +7,12 @@ export const postSubscription = () => {
   const nameRef = useRef<HTMLInputElement>(null);
   const overviewRef = useRef<HTMLTextAreaElement>(null);
   const feeRef = useRef<HTMLInputElement>(null);
-  const frequencyRef = useRef<HTMLInputElement>(null);
+  const billingIntervalRef = useRef<HTMLInputElement>(null);
   const urlRef = useRef<HTMLInputElement>(null);
   const contractedAtRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
+
+  const [billingType, setBillingType] = useState("DAILY");
 
   const route = useRouter();
 
@@ -18,30 +20,37 @@ export const postSubscription = () => {
 
   // 投稿関数
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault;
-
+    e.preventDefault();
+    if (billingIntervalRef.current) {
+      console.log(
+        "billingType",
+        typeof billingType,
+        "tipeof billingIntervalRef.current",
+        typeof parseInt(billingIntervalRef.current.value),
+      );
+    }
     // ifに入れないとエラーが出るため
     if (
       nameRef.current &&
       overviewRef.current &&
       feeRef.current &&
-      frequencyRef.current &&
-      frequencyRef.current &&
+      billingType &&
+      billingIntervalRef.current &&
       urlRef.current &&
-      contractedAtRef.current &&
-      imageRef.current
+      contractedAtRef.current
     ) {
       postSubscription.mutate({
         name: nameRef.current.value,
         overview: overviewRef.current.value,
         fee: parseInt(feeRef.current.value),
-        frequency: parseInt(frequencyRef.current.value),
+        billingType: billingType,
+        billingInterval: parseInt(billingIntervalRef.current.value),
         url: urlRef.current.value,
         contracted_at: new Date(contractedAtRef.current.value),
         image: imageRef.current?.value || "", // 空欄を許容
       });
+      route.push("/");
     }
-    route.push("/");
   };
 
   return (
@@ -102,33 +111,54 @@ export const postSubscription = () => {
             <div className="mb-4">
               <label
                 className="mb-2 block text-sm font-bold text-gray-800"
-                htmlFor="frequency"
+                htmlFor="billingType"
               >
-                課金頻度
+                課金タイプ
+              </label>
+              <select
+                id="billingType"
+                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                value={billingType}
+                onChange={(e) => setBillingType(e.target.value)}
+              >
+                <option value="DAILY">日ごと</option>
+                <option value="MONTHLY">毎月●日</option>
+                <option value="YEARLY">毎年●日</option>
+              </select>
+            </div>
+            <div className="mb-4">
+              <label
+                className="mb-2 block text-sm font-bold text-gray-800"
+                htmlFor="billingInterval"
+              >
+                {billingType === "DAILY" ? "日数" : "日付"}
               </label>
               <input
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                id="frequency"
+                id="billingInterval"
                 type="number"
-                placeholder="課金頻度を入力"
-                ref={frequencyRef}
+                placeholder={
+                  billingType === "DAILY" ? "日数を入力" : "日付を入力"
+                }
+                min={billingType !== "DAILY" ? 1 : undefined}
+                max={billingType !== "DAILY" ? 31 : undefined}
+                ref={billingIntervalRef}
               />
             </div>
             <div className="mb-4">
               <label
                 className="mb-2 block text-sm font-bold text-gray-800"
-                htmlFor="url"
+                htmlFor="contractedAt"
               >
-                課金URL
+                契約URL
               </label>
               <input
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                 id="url"
                 type="url"
-                placeholder="URLを入力"
                 ref={urlRef}
               />
-            </div>{" "}
+            </div>
             <div className="mb-4">
               <label
                 className="mb-2 block text-sm font-bold text-gray-800"

@@ -10,17 +10,18 @@
 
 ### サブスクリプションテーブル
 
-| FiledName     | DataType  | Extra                    |
-| ------------- | --------- | ------------------------ |
-| id            | number    | サブスクテーブルID       |
-| name          | string    | サブスク名               |
-| overview      | string    | 概要                     |
-| fee           | number    | 料金                     |
-| frequency     | number    | 課金頻度                 |
-| url           | string    | 課金URL                  |
-| contracted_at | timestamp | 課金開始日               |
-| updated_at    | timestamp | サブスク情報を更新した日 |
-| image         | string    | 画像                     |
+| FieldName       | DataType  | Extra              |
+| --------------- | --------- | ------------------ |
+| id              | number    | サブスクテーブルID |
+| name            | string    | サブスク名         |
+| overview        | string    | 概要               |
+| fee             | number    | 料金               |
+| billingType     | string    | 課金タイプ         |
+| billingInterval | number    | 課金間隔           |
+| url             | string    | 課金URL            |
+| contracted_at   | timestamp | 契約日             |
+| updated_at      | timestamp | 情報を更新した日   |
+| image           | string    | 画像               |
 
 ### 感想テーブル
 
@@ -35,3 +36,4 @@
 ## やらないこと
 
 1. サブスクリプションの料金が契約途中で変更されたときの処理
+2. うるう年の2月月末での契約（特殊な契約日）の処理

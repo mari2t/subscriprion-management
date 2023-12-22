@@ -11,15 +11,16 @@ datasource db {
 }
 
 model Subscription {
-    id            Int      @id @default(autoincrement())
-    name          String
-    overview      String
-    fee           Int
-    frequency     Int
-    url           String
-    contracted_at DateTime
-    updated_at    DateTime @updatedAt
-    image         String
+    id              Int      @id @default(autoincrement())
+    name            String
+    overview        String
+    fee             Int
+    billingType     String   @default("DAILY") // 文字列として定義
+    billingInterval Int      @default(0)
+    url             String
+    contracted_at   DateTime
+    updated_at      DateTime @updatedAt
+    image           String
 
     // 関連する感想テーブルとのリレーション
     impressions Impression[]

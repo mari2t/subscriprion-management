@@ -4,22 +4,52 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 
 export default function Home() {
-  // デフォルト記載　参考のため残しておく
-  // const hello = api.post.hello.useQuery({ text: "from tRPC" });
   const allSubscriptions = api.post.getAllSubscription.useQuery();
 
   // 現在の総課金金額計算関数
   function calculateTotalBilling(
     contractedAt: Date,
-    frequency: number,
+    billingType: string,
+    billingInterval: number,
     fee: number,
   ): number {
     const currentDate = new Date();
-    const diffTime = currentDate.getTime() - contractedAt.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    const billingCycles = Math.floor(diffDays / frequency);
+    let billingSums = 0;
 
-    return billingCycles * fee + fee;
+    switch (billingType) {
+      case "DAILY":
+        const diffTimeDaily = currentDate.getTime() - contractedAt.getTime();
+        const diffDays = Math.floor(diffTimeDaily / (1000 * 60 * 60 * 24));
+        billingSums = Math.floor(diffDays / billingInterval);
+        break;
+      case "MONTHLY":
+        const months =
+          (currentDate.getFullYear() - contractedAt.getFullYear()) * 12 +
+          currentDate.getMonth() -
+          contractedAt.getMonth();
+        if (currentDate.getDate() >= billingInterval) {
+          billingSums = months + 1;
+        } else {
+          billingSums = months;
+        }
+        break;
+      case "YEARLY":
+        const years = currentDate.getFullYear() - contractedAt.getFullYear();
+        if (
+          currentDate.getMonth() > contractedAt.getMonth() ||
+          (currentDate.getMonth() === contractedAt.getMonth() &&
+            currentDate.getDate() >= contractedAt.getDate())
+        ) {
+          billingSums = years + 1;
+        } else {
+          billingSums = years;
+        }
+        break;
+      default:
+        throw new Error("Invalid billing type");
+    }
+
+    return billingSums * fee + fee;
   }
 
   return (
@@ -57,7 +87,7 @@ export default function Home() {
                   </div>
                   <div className="mt-4 items-center justify-between text-gray-300">
                     <p>料金: ¥{subscription.fee}</p>
-                    <p>課金頻度: {subscription.frequency}日ごと</p>
+                    <p>課金頻度: {subscription.billingInterval}日ごと</p>
                     <p>
                       契約日:{" "}
                       {new Date(
@@ -71,7 +101,8 @@ export default function Home() {
                       現在の総課金金額: ¥
                       {calculateTotalBilling(
                         subscription.contracted_at,
-                        subscription.frequency,
+                        subscription.billingType,
+                        subscription.billingInterval,
                         subscription.fee,
                       )}
                     </p>
