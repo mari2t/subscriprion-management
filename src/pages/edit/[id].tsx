@@ -1,10 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { api } from "~/utils/api";
 
 function DetailSubscription() {
+  const router = useRouter();
+  const { id } = router.query;
+  const parseNumberId = Number(id);
   const allSubscriptions = api.post.getAllSubscription.useQuery();
+  const detailSubscription = api.post.getDetailSubscription.useQuery({
+    id: parseNumberId,
+  });
   const updateSubscription = api.post.updateSubscription.useMutation();
   const deleteSubscription = api.post.deleteSubscription.useMutation({
     // これがないと関数呼び出し後画面がリフレッシュされない時がある
@@ -12,10 +18,6 @@ function DetailSubscription() {
       void allSubscriptions.refetch();
     },
   });
-
-  const router = useRouter();
-  const { id } = router.query;
-  const parseNumberId = Number(id);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const overviewRef = useRef<HTMLTextAreaElement>(null);
@@ -25,52 +27,48 @@ function DetailSubscription() {
   const contractedAtRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
 
-  const [billingType, setBillingType] = useState("DAILY");
+  const [billingType, setBillingType] = useState("");
 
   const route = useRouter();
 
+  useEffect(() => {
+    if (detailSubscription.data?.billingType) {
+      setBillingType(detailSubscription.data.billingType);
+    }
+  }, [detailSubscription.data?.billingType]);
+
   // 編集確定関数
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // `id` が適切な形式であることを確認
     const parsedId = Array.isArray(id) ? id[0] : id;
 
-    // ifに入れないとエラーが出るため
-    if (
-      parsedId &&
-      nameRef.current &&
-      overviewRef.current &&
-      feeRef.current &&
-      billingType &&
-      billingIntervalRef.current &&
-      urlRef.current &&
-      contractedAtRef.current
-    ) {
-      updateSubscription.mutate({
-        id: parseInt(parsedId),
-        name: nameRef.current.value,
-        overview: overviewRef.current.value,
-        fee: parseInt(feeRef.current.value),
-        billingType: billingType,
-        billingInterval: parseInt(billingIntervalRef.current.value),
-        url: urlRef.current.value,
-        contracted_at: new Date(contractedAtRef.current.value),
-        image: imageRef.current?.value || "", // 空欄を許容
-      });
-      route.push("/");
-    }
-  };
-
-  // 削除関数
-  const handleDelete = () => {
-    if (window.confirm("本当に削除しますか？")) {
+    if (parsedId) {
       try {
-        deleteSubscription.mutate({ id: parseNumberId });
+        await updateSubscription.mutateAsync({
+          id: parseInt(parsedId),
+          name: nameRef.current?.value || detailSubscription.data?.name,
+          overview:
+            overviewRef.current?.value || detailSubscription.data?.overview,
+          fee: feeRef.current?.value
+            ? parseInt(feeRef.current.value)
+            : detailSubscription.data?.fee,
+          billingType: billingType,
+          billingInterval: billingIntervalRef.current?.value
+            ? parseInt(billingIntervalRef.current.value)
+            : detailSubscription.data?.billingInterval,
+          url: urlRef.current?.value || detailSubscription.data?.url,
+          contracted_at: contractedAtRef.current?.value
+            ? new Date(contractedAtRef.current.value)
+            : detailSubscription.data?.contracted_at,
+          image: imageRef.current?.value || detailSubscription.data?.image,
+        });
         router.push("/");
       } catch (err) {
         console.error(err);
       }
+    } else {
+      console.log("IDが不正です。");
     }
   };
 
@@ -96,7 +94,7 @@ function DetailSubscription() {
               className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
               id="name"
               type="text"
-              placeholder="サブスクリプション名を入力"
+              placeholder={detailSubscription.data?.name}
               ref={nameRef}
             />
           </div>
@@ -110,7 +108,7 @@ function DetailSubscription() {
             <textarea
               className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
               id="overview"
-              placeholder="概要を入力"
+              placeholder={detailSubscription.data?.overview}
               ref={overviewRef}
             />
           </div>
@@ -125,7 +123,7 @@ function DetailSubscription() {
               className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
               id="fee"
               type="number"
-              placeholder="料金を入力"
+              placeholder={`${detailSubscription.data?.fee || ""}`}
               ref={feeRef}
             />
             <div className="mb-4">
@@ -157,9 +155,9 @@ function DetailSubscription() {
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                 id="billingInterval"
                 type="number"
-                placeholder={
-                  billingType === "DAILY" ? "日数を入力" : "日付を入力"
-                }
+                placeholder={`${
+                  detailSubscription.data?.billingInterval || ""
+                }`}
                 min={billingType !== "DAILY" ? 1 : undefined}
                 max={billingType !== "DAILY" ? 31 : undefined}
                 ref={billingIntervalRef}
@@ -176,6 +174,7 @@ function DetailSubscription() {
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                 id="url"
                 type="url"
+                placeholder={`${detailSubscription.data?.url || ""}`}
                 ref={urlRef}
               />
             </div>
@@ -190,6 +189,7 @@ function DetailSubscription() {
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                 id="contractedAt"
                 type="date"
+                placeholder={`${detailSubscription.data?.contracted_at || ""}`}
                 ref={contractedAtRef}
               />
             </div>{" "}
@@ -204,21 +204,21 @@ function DetailSubscription() {
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
                 id="image"
                 type="url"
-                placeholder="画像URLを入力"
+                placeholder={`${detailSubscription.data?.image || ""}`}
                 ref={imageRef}
               />
             </div>
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="focus:shadow-outline rounded bg-orange-500 px-4 py-2 font-bold text-white hover:bg-orange-700 focus:outline-none"
+              className="mt-4 rounded-md bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-800 focus:outline-none"
               type="submit"
             >
-              確定
+              確定する
             </button>
             <Link
-              href="/"
-              className="inline-block align-baseline text-sm font-bold text-orange-500 hover:text-orange-800"
+              href={`/subscription/${id}`}
+              className="mt-4 rounded-md bg-green-500 px-4 py-2 align-baseline text-sm font-bold text-white hover:bg-green-800 focus:outline-none"
             >
               キャンセル
             </Link>

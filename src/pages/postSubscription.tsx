@@ -183,14 +183,14 @@ export const postSubscription = () => {
           </div>
           <div className="flex items-center justify-between">
             <button
-              className="focus:shadow-outline rounded bg-orange-500 px-4 py-2 font-bold text-white hover:bg-orange-700 focus:outline-none"
+              className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
               type="submit"
             >
-              投稿する
+              登録する
             </button>
             <Link
               href="/"
-              className="inline-block align-baseline text-sm font-bold text-orange-500 hover:text-orange-800"
+              className="inline-block align-baseline text-sm font-bold text-green-500 hover:text-green-800 focus:outline-none"
             >
               キャンセル
             </Link>

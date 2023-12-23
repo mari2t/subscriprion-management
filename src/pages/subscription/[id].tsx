@@ -58,13 +58,13 @@ function DetailSubscription() {
         </p>
         <Link
           href={`/edit/${id}`}
-          className="mt-4 rounded-md bg-blue-500 px-4 py-2 text-white"
+          className="mt-4 rounded-md bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-800 focus:outline-none"
         >
           編集する
         </Link>
         <Link
           href="/"
-          className="mt-4 rounded-md bg-green-500 px-4 py-2 text-white"
+          className="mt-4 rounded-md bg-green-500 px-4 py-2 align-baseline text-sm font-bold text-white hover:bg-green-800 focus:outline-none"
         >
           キャンセル
         </Link>
