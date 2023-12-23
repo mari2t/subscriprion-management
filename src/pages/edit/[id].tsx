@@ -1,9 +1,22 @@
 import React, { useState, useRef } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { api } from "~/utils/api";
-import { useRouter } from "next/navigation";
 
-export const postSubscription = () => {
+function DetailSubscription() {
+  const allSubscriptions = api.post.getAllSubscription.useQuery();
+  const updateSubscription = api.post.updateSubscription.useMutation();
+  const deleteSubscription = api.post.deleteSubscription.useMutation({
+    // これがないと関数呼び出し後画面がリフレッシュされない時がある
+    onSettled: () => {
+      void allSubscriptions.refetch();
+    },
+  });
+
+  const router = useRouter();
+  const { id } = router.query;
+  const parseNumberId = Number(id);
+
   const nameRef = useRef<HTMLInputElement>(null);
   const overviewRef = useRef<HTMLTextAreaElement>(null);
   const feeRef = useRef<HTMLInputElement>(null);
@@ -16,14 +29,16 @@ export const postSubscription = () => {
 
   const route = useRouter();
 
-  const postSubscription = api.post.postSubscription.useMutation();
-
-  // 投稿関数
+  // 編集確定関数
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // `id` が適切な形式であることを確認
+    const parsedId = Array.isArray(id) ? id[0] : id;
+
     // ifに入れないとエラーが出るため
     if (
+      parsedId &&
       nameRef.current &&
       overviewRef.current &&
       feeRef.current &&
@@ -32,7 +47,8 @@ export const postSubscription = () => {
       urlRef.current &&
       contractedAtRef.current
     ) {
-      postSubscription.mutate({
+      updateSubscription.mutate({
+        id: parseInt(parsedId),
         name: nameRef.current.value,
         overview: overviewRef.current.value,
         fee: parseInt(feeRef.current.value),
@@ -46,11 +62,23 @@ export const postSubscription = () => {
     }
   };
 
+  // 削除関数
+  const handleDelete = () => {
+    if (window.confirm("本当に削除しますか？")) {
+      try {
+        deleteSubscription.mutate({ id: parseNumberId });
+        router.push("/");
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
       <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
         <h2 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-          サブスクリプション登録
+          サブスクリプション編集
         </h2>
 
         <form
@@ -186,7 +214,7 @@ export const postSubscription = () => {
               className="focus:shadow-outline rounded bg-orange-500 px-4 py-2 font-bold text-white hover:bg-orange-700 focus:outline-none"
               type="submit"
             >
-              投稿する
+              確定
             </button>
             <Link
               href="/"
@@ -199,5 +227,6 @@ export const postSubscription = () => {
       </div>
     </main>
   );
-};
-export default postSubscription;
+}
+
+export default DetailSubscription;

@@ -34,10 +34,19 @@ export const postRouter = createTRPCRouter({
   }), */
 
   // Subscription table
+
+  // Read
   getAllSubscription: publicProcedure.query(() => {
     return db.subscription.findMany();
   }),
 
+  getDetailSubscription: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query((req) => {
+      return db.subscription.findUnique({ where: { id: req.input.id } });
+    }),
+
+  // Create
   postSubscription: publicProcedure
     .input(
       z.object({
@@ -67,12 +76,39 @@ export const postRouter = createTRPCRouter({
       return postSubscription;
     }),
 
-  getDetailSubscription: publicProcedure
-    .input(z.object({ id: z.number() }))
-    .query((req) => {
-      return db.subscription.findUnique({ where: { id: req.input.id } });
+  // Update
+  updateSubscription: publicProcedure
+    .input(
+      z.object({
+        id: z.number(),
+        name: z.string().optional(),
+        overview: z.string().optional(),
+        fee: z.number().optional(),
+        billingType: z.string().optional(),
+        billingInterval: z.number().optional(),
+        url: z.string().optional(),
+        contracted_at: z.date().optional(),
+        image: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const updatedSubscription = await db.subscription.update({
+        where: { id: input.id },
+        data: {
+          name: input.name,
+          overview: input.overview,
+          fee: input.fee,
+          billingType: input.billingType,
+          billingInterval: input.billingInterval,
+          url: input.url,
+          contracted_at: input.contracted_at,
+          image: input.image,
+        },
+      });
+      return updatedSubscription;
     }),
 
+  // Delete
   deleteSubscription: publicProcedure
     .input(z.object({ id: z.number() }))
     .mutation((req) => {

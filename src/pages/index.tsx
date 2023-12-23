@@ -16,6 +16,7 @@ export default function Home() {
     const currentDate = new Date();
     let billingSums = 0;
 
+    // 課金タイプ表示関数
     switch (billingType) {
       case "DAILY":
         const diffTimeDaily = currentDate.getTime() - contractedAt.getTime();
