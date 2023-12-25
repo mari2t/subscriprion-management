@@ -18,6 +18,13 @@ function DetailSubscription() {
       void allSubscriptions.refetch();
     },
   });
+  const allImpressions = api.post.getAllImpressions.useQuery();
+  const deleteAllImpressions = api.post.deleteAllImpressions.useMutation({
+    // これがないと関数呼び出し後画面がリフレッシュされない時がある
+    onSettled: () => {
+      void allSubscriptions.refetch();
+    },
+  });
 
   const nameRef = useRef<HTMLInputElement>(null);
   const overviewRef = useRef<HTMLTextAreaElement>(null);
@@ -72,16 +79,32 @@ function DetailSubscription() {
     }
   };
 
+  // 削除関数
+  const handleDelete = () => {
+    if (window.confirm("サブスクリプションとその感想を削除しますか？")) {
+      try {
+        // サブスクとサブスクの感想全て削除
+        deleteAllImpressions.mutate({ id: parseNumberId });
+        deleteSubscription.mutate({ id: parseNumberId });
+        router.push("/");
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <h2 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#6a70dc]">
+      <div className="container flex flex-col items-center justify-center gap-8 px-4 py-16 ">
+        <h1 className="text-2xl font-extrabold tracking-tight text-gray-200 sm:text-[4rem]">
+          Subscription Management App
+        </h1>
+        <p className="text-lg font-extrabold tracking-tight text-gray-200 sm:text-[2rem]">
           サブスクリプション編集
-        </h2>
+        </p>
 
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-md rounded-lg bg-white p-6 shadow-md"
+          className="w-full max-w-md rounded-lg bg-gray-200 p-6 shadow-md"
         >
           <div className="mb-4">
             <label
@@ -194,18 +217,13 @@ function DetailSubscription() {
               />
             </div>{" "}
             <div className="mb-4">
-              <label
-                className="mb-2 block text-sm font-bold text-gray-800"
-                htmlFor="image"
-              >
-                画像URL
-              </label>
+              <label htmlFor="emoji">イメージ文字</label>
               <input
-                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                id="image"
-                type="url"
+                type="text"
+                id="emoji"
                 placeholder={`${detailSubscription.data?.image || ""}`}
                 ref={imageRef}
+                maxLength={2}
               />
             </div>
           </div>
@@ -218,10 +236,16 @@ function DetailSubscription() {
             </button>
             <Link
               href={`/subscription/${id}`}
-              className="mt-4 rounded-md bg-green-500 px-4 py-2 align-baseline text-sm font-bold text-white hover:bg-green-800 focus:outline-none"
+              className="focus:shadow-outline rounded bg-green-500 px-4 py-2 font-bold text-white hover:bg-green-700 focus:outline-none"
             >
               キャンセル
             </Link>
+            <button
+              className="mt-4 rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-800 focus:outline-none"
+              onClick={handleDelete}
+            >
+              サブスクリプションを削除する
+            </button>
           </div>
         </form>
       </div>

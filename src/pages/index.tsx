@@ -50,7 +50,7 @@ export default function Home() {
         throw new Error("Invalid billing type");
     }
 
-    return billingSums * fee + fee;
+    return billingSums * fee;
   }
 
   return (
@@ -60,12 +60,12 @@ export default function Home() {
         <meta name="description" content="Subscription Management App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#6a70dc]">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-          <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
-            <span className="text-[hsl(265,100%,70%)]">Subscription</span>{" "}
-            Management App
+      <main className="flex min-h-screen flex-col  items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#6a70dc]">
+        <div className="container flex flex-col items-center justify-center gap-8 px-4 py-16 ">
+          <h1 className="text-2xl font-extrabold tracking-tight text-gray-200 sm:text-[4rem]">
+            Subscription Management App
           </h1>
+          <p className="text-lg font-extrabold tracking-tight text-gray-200 sm:text-[2rem]"></p>
           <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {allSubscriptions.data?.map((subscription) => (
               <Link
@@ -73,22 +73,32 @@ export default function Home() {
                 key={subscription.id}
               >
                 <div className="block rounded-xl bg-white/10 p-6 transition-all duration-300 hover:bg-white/20">
-                  <img
-                    src={subscription.image || "/image/default-image.jpg"} // 画像がない場合のデフォルト画像
-                    alt={subscription.name}
-                    className="h-16 w-16 space-x-4 rounded-full "
-                  />
+                  <p className="text-5xl text-white">
+                    {subscription.image || "　"}
+                  </p>
                   <div className="flex items-center space-x-4 pt-4">
                     <div>
                       <h3 className="text-2xl font-bold text-white">
                         {subscription.name}
                       </h3>
-                      <p className="text-gray-400">{subscription.overview}</p>
+                      <p className="text-gray-300">{subscription.overview}</p>
                     </div>
                   </div>
-                  <div className="mt-4 items-center justify-between text-gray-300">
+                  <div className="mt-4 items-center justify-between text-gray-400">
                     <p>料金: ¥{subscription.fee}</p>
-                    <p>課金頻度: {subscription.billingInterval}日ごと</p>
+                    <p>
+                      課金頻度:
+                      {subscription.billingType === "DAILY" &&
+                        `${subscription.billingInterval}日ごと`}
+                      {subscription.billingType === "MONTHLY" &&
+                        `毎月 ${subscription.billingInterval}日`}
+                      {subscription.billingType === "YEARLY" &&
+                        `毎年 ${
+                          new Date(subscription.contracted_at).getMonth() + 1
+                        }月 ${new Date(
+                          subscription.contracted_at,
+                        ).getDate()}日`}
+                    </p>
                     <p>
                       契約日:{" "}
                       {new Date(
@@ -112,10 +122,10 @@ export default function Home() {
               </Link>
             ))}
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
+          <div className="">
             <Link
               href="/postSubscription"
-              className="rounded-md bg-violet-900 px-6 py-4 font-medium text-gray-300 duration-300 hover:bg-violet-900/50"
+              className="focus:shadow-outline rounded bg-violet-700 px-4 py-2 font-bold text-white hover:bg-violet-900 focus:outline-none"
             >
               サブスクリプションを登録する
             </Link>

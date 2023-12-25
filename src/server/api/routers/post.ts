@@ -116,7 +116,7 @@ export const postRouter = createTRPCRouter({
     }),
 
   // Impression table
-  getAllImpression: publicProcedure.query(() => {
+  getAllImpressions: publicProcedure.query(() => {
     return db.impression.findMany();
   }),
 
@@ -151,5 +151,13 @@ export const postRouter = createTRPCRouter({
     .input(z.object({ id: z.number() }))
     .mutation((req) => {
       return db.impression.delete({ where: { impression_id: req.input.id } });
+    }),
+
+  deleteAllImpressions: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation((req) => {
+      return db.impression.deleteMany({
+        where: { subscription_id: req.input.id },
+      });
     }),
 });
