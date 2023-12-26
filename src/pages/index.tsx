@@ -2,6 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 import { api } from "~/utils/api";
+import Header from "./Header";
 
 export default function Home() {
   const allSubscriptions = api.post.getAllSubscription.useQuery();
@@ -60,19 +61,19 @@ export default function Home() {
         <meta name="description" content="Subscription Management App" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex min-h-screen flex-col  items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#6a70dc]">
+      <Header />
+      <main className="flex min-h-screen flex-col  items-center justify-center bg-gradient-to-b from-indigo-900 to-indigo-500">
         <div className="container flex flex-col items-center justify-center gap-8 px-4 py-16 ">
-          <h1 className="text-2xl font-extrabold tracking-tight text-gray-200 sm:text-[4rem]">
-            Subscription Management App
-          </h1>
-          <p className="text-lg font-extrabold tracking-tight text-gray-200 sm:text-[2rem]"></p>
+          <p className="text-lg font-extrabold tracking-tight text-gray-100 sm:text-[2rem]">
+            今月の課金額：
+          </p>
           <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {allSubscriptions.data?.map((subscription) => (
               <Link
                 href={`/subscription/${subscription.id}`}
                 key={subscription.id}
               >
-                <div className="block rounded-xl bg-white/10 p-6 transition-all duration-300 hover:bg-white/20">
+                <div className="block rounded-xl bg-white/10 p-6 transition-all duration-100 hover:bg-white/20">
                   <p className="text-5xl text-white">
                     {subscription.image || "　"}
                   </p>
@@ -81,10 +82,10 @@ export default function Home() {
                       <h3 className="text-2xl font-bold text-white">
                         {subscription.name}
                       </h3>
-                      <p className="text-gray-300">{subscription.overview}</p>
+                      <p className="text-gray-100">{subscription.overview}</p>
                     </div>
                   </div>
-                  <div className="mt-4 items-center justify-between text-gray-400">
+                  <div className="mt-4 items-center justify-between text-gray-300">
                     <p>料金: ¥{subscription.fee}</p>
                     <p>
                       課金頻度:
@@ -106,7 +107,7 @@ export default function Home() {
                       ).toLocaleDateString()}
                     </p>
                   </div>
-                  <div className="mt-4 items-center justify-between text-gray-300">
+                  <div className="mt-4 items-center justify-between text-gray-100">
                     {" "}
                     <p>
                       現在の総課金金額: ¥
@@ -125,7 +126,7 @@ export default function Home() {
           <div className="">
             <Link
               href="/postSubscription"
-              className="focus:shadow-outline rounded bg-violet-700 px-4 py-2 font-bold text-white hover:bg-violet-900 focus:outline-none"
+              className="focus:shadow-outline rounded bg-indigo-700 px-4 py-2 font-bold text-white hover:bg-violet-900 focus:outline-none"
             >
               サブスクリプションを登録する
             </Link>

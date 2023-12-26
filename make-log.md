@@ -1,5 +1,10 @@
 # make-log
 
+## 2023/12/26
+
+1. Next.jsにはlayout.tsxがあってそこでHeaderを設定したけどT3にはlayout.tsxは無いらしい。
+2. Header作成
+
 ## 2023/12/25
 
 1. 感想ページ作成。感想削除削除機能追加。
