@@ -42,10 +42,10 @@ export const impression = () => {
   return (
     <>
       <Header />
-      <main className="flex min-h-screen flex-col  items-center justify-center bg-gradient-to-b from-indigo-900 to-indigo-500">
+      <main className="flex min-h-screen flex-col  items-center bg-gradient-to-b from-indigo-900 to-indigo-500">
         <div className="container flex flex-col items-center justify-center gap-8 px-4 py-16 ">
           <p className="text-lg font-extrabold tracking-tight text-gray-100 sm:text-[2rem]">
-            感想登録
+            {detailSubscription.data?.name}の感想登録
           </p>
 
           <form
@@ -156,7 +156,7 @@ export const impression = () => {
                 className="focus:shadow-outline rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none"
                 type="submit"
               >
-                登録する
+                登録
               </button>
               <Link
                 href={`/subscription/${id}`}

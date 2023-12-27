@@ -99,7 +99,7 @@ function DetailSubscription() {
       <main className="flex min-h-screen flex-col  items-center justify-center bg-gradient-to-b from-indigo-900 to-indigo-500">
         <div className="container flex flex-col items-center justify-center gap-8 px-4 py-8">
           <p className="text-lg font-extrabold tracking-tight text-gray-100 sm:text-[2rem]">
-            感想登録
+            サブスクリプション編集
           </p>
 
           <form
@@ -148,93 +148,97 @@ function DetailSubscription() {
                 type="number"
                 placeholder={`${detailSubscription.data?.fee || ""}`}
                 ref={feeRef}
+              />{" "}
+            </div>
+            <div className="mb-4">
+              <label
+                className="mb-2 block text-sm font-bold text-gray-800"
+                htmlFor="billingType"
+              >
+                課金タイプ
+              </label>
+              <select
+                id="billingType"
+                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                value={billingType}
+                onChange={(e) => setBillingType(e.target.value)}
+              >
+                <option value="DAILY">日ごと</option>
+                <option value="MONTHLY">毎月●日</option>
+                <option value="YEARLY">毎年●日</option>
+              </select>
+            </div>
+            <div className="mb-4">
+              <label
+                className="mb-2 block text-sm font-bold text-gray-800"
+                htmlFor="billingInterval"
+              >
+                {billingType === "DAILY" ? "日数" : "日付"}
+              </label>
+              <input
+                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                id="billingInterval"
+                type="number"
+                placeholder={`${
+                  detailSubscription.data?.billingInterval || ""
+                }`}
+                min={billingType !== "DAILY" ? 1 : undefined}
+                max={billingType !== "DAILY" ? 31 : undefined}
+                ref={billingIntervalRef}
               />
-              <div className="mb-4">
-                <label
-                  className="mb-2 block text-sm font-bold text-gray-800"
-                  htmlFor="billingType"
-                >
-                  課金タイプ
-                </label>
-                <select
-                  id="billingType"
-                  className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                  value={billingType}
-                  onChange={(e) => setBillingType(e.target.value)}
-                >
-                  <option value="DAILY">日ごと</option>
-                  <option value="MONTHLY">毎月●日</option>
-                  <option value="YEARLY">毎年●日</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label
-                  className="mb-2 block text-sm font-bold text-gray-800"
-                  htmlFor="billingInterval"
-                >
-                  {billingType === "DAILY" ? "日数" : "日付"}
-                </label>
-                <input
-                  className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                  id="billingInterval"
-                  type="number"
-                  placeholder={`${
-                    detailSubscription.data?.billingInterval || ""
-                  }`}
-                  min={billingType !== "DAILY" ? 1 : undefined}
-                  max={billingType !== "DAILY" ? 31 : undefined}
-                  ref={billingIntervalRef}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="mb-2 block text-sm font-bold text-gray-800"
-                  htmlFor="contractedAt"
-                >
-                  契約URL
-                </label>
-                <input
-                  className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                  id="url"
-                  type="url"
-                  placeholder={`${detailSubscription.data?.url || ""}`}
-                  ref={urlRef}
-                />
-              </div>
-              <div className="mb-4">
-                <label
-                  className="mb-2 block text-sm font-bold text-gray-800"
-                  htmlFor="contractedAt"
-                >
-                  契約日
-                </label>
-                <input
-                  className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                  id="contractedAt"
-                  type="date"
-                  placeholder={`${
-                    detailSubscription.data?.contracted_at || ""
-                  }`}
-                  ref={contractedAtRef}
-                />
-              </div>{" "}
-              <div className="mb-4">
-                <label htmlFor="emoji">イメージ文字</label>
-                <input
-                  type="text"
-                  id="emoji"
-                  placeholder={`${detailSubscription.data?.image || ""}`}
-                  ref={imageRef}
-                  maxLength={2}
-                />
-              </div>
+            </div>
+            <div className="mb-4">
+              <label
+                className="mb-2 block text-sm font-bold text-gray-800"
+                htmlFor="contractedAt"
+              >
+                契約URL
+              </label>
+              <input
+                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                id="url"
+                type="url"
+                placeholder={`${detailSubscription.data?.url || ""}`}
+                ref={urlRef}
+              />
+            </div>
+            <div className="mb-4">
+              <label
+                className="mb-2 block text-sm font-bold text-gray-800"
+                htmlFor="contractedAt"
+              >
+                契約日
+              </label>
+              <input
+                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                id="contractedAt"
+                type="date"
+                placeholder={`${detailSubscription.data?.contracted_at || ""}`}
+                ref={contractedAtRef}
+              />
+            </div>{" "}
+            <div className="mb-4">
+              <label
+                htmlFor="emoji"
+                className="mb-2 block text-sm font-bold text-gray-800"
+              >
+                イメージ文字
+              </label>
+              <input
+                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                type="text"
+                id="emoji"
+                placeholder={`${detailSubscription.data?.image || ""}`}
+                ref={imageRef}
+                maxLength={2}
+              />
             </div>
             <div className="flex items-center justify-between">
               <button
-                className="mt-4 rounded-md bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-800 focus:outline-none"
+                className="focus:shadow-outline rounded bg-indigo-500 px-4 py-2 font-bold text-white hover:bg-indigo-700 focus:outline-none"
                 type="submit"
               >
-                確定する
+                確定
               </button>
               <Link
                 href={`/subscription/${id}`}
@@ -243,10 +247,10 @@ function DetailSubscription() {
                 キャンセル
               </Link>
               <button
-                className="mt-4 rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-800 focus:outline-none"
+                className="focus:shadow-outline rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 focus:outline-none"
                 onClick={handleDelete}
               >
-                サブスクリプションを削除する
+                サブスクリプション削除
               </button>
             </div>
           </form>

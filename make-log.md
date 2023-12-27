@@ -1,5 +1,10 @@
 # make-log
 
+## 2023/12/27
+
+1. styleを統一
+2. 平均レーティングを追加
+
 ## 2023/12/26
 
 1. Next.jsにはlayout.tsxがあってそこでHeaderを設定したけどT3にはlayout.tsxは無いらしい。

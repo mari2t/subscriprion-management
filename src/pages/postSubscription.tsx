@@ -189,7 +189,7 @@ export const postSubscription = () => {
                 className="focus:shadow-outline rounded bg-violet-500 px-4 py-2 font-bold text-white hover:bg-violet-700 focus:outline-none"
                 type="submit"
               >
-                登録する
+                登録
               </button>
               <Link
                 href="/"
