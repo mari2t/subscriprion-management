@@ -1,28 +1,33 @@
-# Create T3 App
+## Overview
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+サブスクリプションの料金や感想を管理するアプリです。  
+This application manages subscription fees and your own impressions.
 
-## What's next? How do I make an app with this?
+## Example
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+### ![example1.png](/public/image/example1.png "example1.png")
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+### ![example2.png](/public/image/example2.png "example2.png")
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### ![example3.png](/public/image/example3.png "example3.png")
 
-## Learn More
+## Features
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- T3
+  - Next.js
+  - Prisma
+  - Tailwind CSS
+  - tRPC
+- [設計ログ](./plan-log.md)
+- [作成ログ](./make-log.md)
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Creation Date
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+2023/12/28
 
-## How do I deploy this?
+## Purpose of creation
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+1. サブスクリプションの一か月の総額、これまでの課金額を見える化したい。
+2. サブスクリプションの料金、契約URL等を簡単に管理したい
+3. 継続するかどうかの参考とするため、サブスクリプションを使用した感想を投稿したい
+4. T3アプリをつくってみたい

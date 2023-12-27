@@ -15,7 +15,7 @@ model Subscription {
     name            String
     overview        String
     fee             Int
-    billingType     String   @default("DAILY") // 文字列として定義
+    billingType     String   @default("DAILY")
     billingInterval Int      @default(0)
     url             String
     contracted_at   DateTime

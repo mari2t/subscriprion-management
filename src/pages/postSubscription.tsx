@@ -29,7 +29,6 @@ export const postSubscription = () => {
       feeRef.current &&
       billingType &&
       billingIntervalRef.current &&
-      urlRef.current &&
       contractedAtRef.current
     ) {
       postSubscription.mutate({
@@ -38,7 +37,7 @@ export const postSubscription = () => {
         fee: parseInt(feeRef.current.value),
         billingType: billingType,
         billingInterval: parseInt(billingIntervalRef.current.value),
-        url: urlRef.current.value,
+        url: urlRef.current?.value || "", // 空欄を許容,
         contracted_at: new Date(contractedAtRef.current.value),
         image: imageRef.current?.value || "", // 空欄を許容
       });
@@ -51,7 +50,7 @@ export const postSubscription = () => {
     <>
       <Header />
       <main className="flex min-h-screen flex-col  items-center justify-center bg-gradient-to-b from-indigo-900 to-indigo-500">
-        <div className="container flex flex-col items-center justify-center gap-8 px-4 py-16 ">
+        <div className="container flex flex-col items-center justify-center gap-8 px-4 py-8">
           <p className="text-lg font-extrabold tracking-tight text-gray-100 sm:text-[2rem]">
             サブスクリプション登録
           </p>
@@ -79,7 +78,7 @@ export const postSubscription = () => {
                 className="mb-2 block text-sm font-bold text-gray-800"
                 htmlFor="description"
               >
-                サブスクリプション内容
+                サブスクリプション概要
               </label>
               <textarea
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
@@ -133,27 +132,15 @@ export const postSubscription = () => {
                 id="billingInterval"
                 type="number"
                 placeholder={
-                  billingType === "DAILY" ? "日数を入力" : "日付を入力"
+                  billingType === "DAILY"
+                    ? "課金頻度の日数を入力"
+                    : "課金される日付を入力"
                 }
                 min={billingType !== "DAILY" ? 1 : undefined}
                 max={billingType !== "DAILY" ? 31 : undefined}
                 ref={billingIntervalRef}
               />
-            </div>
-            <div className="mb-4">
-              <label
-                className="mb-2 block text-sm font-bold text-gray-800"
-                htmlFor="contractedAt"
-              >
-                契約URL
-              </label>
-              <input
-                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                id="url"
-                type="url"
-                ref={urlRef}
-              />
-            </div>
+            </div>{" "}
             <div className="mb-4">
               <label
                 className="mb-2 block text-sm font-bold text-gray-800"
@@ -170,23 +157,38 @@ export const postSubscription = () => {
             </div>{" "}
             <div className="mb-4">
               <label
+                className="mb-2 block text-sm font-bold text-gray-800"
+                htmlFor="contractedAt"
+              >
+                契約確認URL（任意）
+              </label>
+              <input
+                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                id="url"
+                type="url"
+                placeholder="契約確認ができるURLを入力"
+                ref={urlRef}
+              />
+            </div>
+            <div className="mb-4">
+              <label
                 htmlFor="emoji"
                 className="mb-2 block text-sm font-bold text-gray-800"
               >
-                イメージ文字
+                イメージ1文字（任意）
               </label>
               <input
                 type="text"
                 id="emoji"
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                placeholder="絵文字を入力"
+                placeholder="イメージ文字を1文字入力"
                 ref={imageRef}
                 maxLength={2}
               />
             </div>
             <div className="flex items-center justify-between">
               <button
-                className="focus:shadow-outline rounded bg-violet-500 px-4 py-2 font-bold text-white hover:bg-violet-700 focus:outline-none"
+                className="focus:shadow-outline rounded bg-indigo-500 px-4 py-2 font-bold text-white hover:bg-indigo-700 focus:outline-none"
                 type="submit"
               >
                 登録

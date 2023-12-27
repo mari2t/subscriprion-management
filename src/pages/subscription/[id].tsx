@@ -17,6 +17,7 @@ function DetailSubscription() {
     // これがないと関数呼び出し後画面がリフレッシュされない時がある
     onSettled: () => {
       void allSubscriptions.refetch();
+      void allImpressions.refetch();
     },
   });
 
@@ -77,7 +78,7 @@ function DetailSubscription() {
     <>
       <Header />
       <main className="flex min-h-screen flex-col  items-center bg-gradient-to-b from-indigo-900 to-indigo-500">
-        <div className="container flex flex-col items-center justify-center gap-8 px-4 py-16 ">
+        <div className="container flex flex-col items-center justify-center gap-8 px-4 py-8 ">
           <p className="text-lg font-extrabold tracking-tight text-gray-100 sm:text-[2rem]">
             サブスクリプション詳細
           </p>
@@ -93,7 +94,18 @@ function DetailSubscription() {
               {detailSubscription.data?.overview}
             </p>
             <p className="mb-2 text-gray-700">
-              課金頻度:
+              <span className="font-extrabold text-gray-700">
+                平均レーティング{" "}
+              </span>
+              ★{calculateAverageRating()}
+            </p>
+
+            <p className="mb-2 whitespace-pre-line text-gray-700">
+              <span className="font-extrabold text-gray-700">料金 </span>¥
+              {detailSubscription.data?.fee}
+            </p>
+            <p className="mb-2 text-gray-700">
+              <span className="font-extrabold text-gray-700">課金頻度 </span>
               {detailSubscription.data?.billingType === "DAILY" &&
                 `${detailSubscription.data?.billingInterval}日ごと`}
               {detailSubscription.data?.billingType === "MONTHLY" &&
@@ -106,17 +118,24 @@ function DetailSubscription() {
                   detailSubscription.data?.contracted_at,
                 ).getDate()}日`}
             </p>
-            <div className="mb-2 text-gray-700">
-              契約日:{" "}
+            <p className="mb-2 text-gray-700">
+              <span className="font-extrabold text-gray-700">契約日 </span>
               {detailSubscription.data?.contracted_at
                 ? formatDate(detailSubscription.data.contracted_at)
                 : "日付がありません"}
-            </div>
-            <div className="mb-4">
-              <p className="text-gray-700">
-                平均レーティング: ★{calculateAverageRating()}
-              </p>
-            </div>
+            </p>
+            <p className="mb-4 text-gray-700">
+              <span className="font-extrabold text-gray-700">契約確認URL </span>{" "}
+              {detailSubscription.data?.url}
+            </p>
+            <p className="mb-2 text-sm text-gray-500">
+              <span className="text-sm  font-extrabold text-gray-500">
+                サブスクリプション情報更新日{" "}
+              </span>
+              {detailSubscription.data?.updated_at
+                ? formatDate(detailSubscription.data.updated_at)
+                : "日付がありません"}
+            </p>
 
             <div className="flex items-center justify-between">
               <Link
@@ -140,7 +159,7 @@ function DetailSubscription() {
               </Link>
             </div>
           </div>
-          <div className="mt-2 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mx-2 mt-2 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {allImpressions.data
               ?.filter(
                 (impression) => impression.subscription_id === parseNumberId,
@@ -149,15 +168,17 @@ function DetailSubscription() {
                 <div className="block rounded-xl bg-white/10 p-6 transition-all ">
                   <div className="flex items-center space-x-4 pt-4">
                     <div>
-                      <p className="text-gray-100">{impression.comment}</p>
+                      <p className="font-bold text-gray-100">
+                        {impression.comment}
+                      </p>
                     </div>
                   </div>
-                  <div className="mt-4 items-center justify-between text-gray-400">
+                  <div className="mt-2 items-center justify-between text-gray-200">
                     <p>レーティング: ★{impression.rating}</p>
                     <p>
                       投稿日：{" "}
-                      {detailSubscription.data?.contracted_at
-                        ? formatDate(detailSubscription.data.contracted_at)
+                      {impression.posted_at
+                        ? formatDate(impression.posted_at)
                         : "日付がありません"}
                     </p>
                     <button

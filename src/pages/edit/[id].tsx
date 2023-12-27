@@ -17,15 +17,11 @@ function DetailSubscription() {
     // これがないと関数呼び出し後画面がリフレッシュされない時がある
     onSettled: () => {
       void allSubscriptions.refetch();
+      void allImpressions.refetch();
     },
   });
   const allImpressions = api.post.getAllImpressions.useQuery();
-  const deleteAllImpressions = api.post.deleteAllImpressions.useMutation({
-    // これがないと関数呼び出し後画面がリフレッシュされない時がある
-    onSettled: () => {
-      void allSubscriptions.refetch();
-    },
-  });
+  const deleteAllImpressions = api.post.deleteAllImpressions.useMutation();
 
   const nameRef = useRef<HTMLInputElement>(null);
   const overviewRef = useRef<HTMLTextAreaElement>(null);
@@ -81,18 +77,21 @@ function DetailSubscription() {
   };
 
   // 削除関数
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (window.confirm("サブスクリプションとその感想を削除しますか？")) {
       try {
-        // サブスクとサブスクの感想全て削除
-        deleteAllImpressions.mutate({ id: parseNumberId });
-        deleteSubscription.mutate({ id: parseNumberId });
+        // 感想を全て削除
+        await deleteAllImpressions.mutateAsync({ id: parseNumberId });
+        // サブスクリプションを削除
+        await deleteSubscription.mutateAsync({ id: parseNumberId });
+        // 両方の処理が完了した後にホームに遷移
         router.push("/");
       } catch (err) {
         console.error(err);
       }
     }
   };
+
   return (
     <>
       <Header />
@@ -126,7 +125,7 @@ function DetailSubscription() {
                 className="mb-2 block text-sm font-bold text-gray-800"
                 htmlFor="description"
               >
-                サブスクリプション内容
+                サブスクリプション概要
               </label>
               <textarea
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
@@ -192,21 +191,6 @@ function DetailSubscription() {
                 className="mb-2 block text-sm font-bold text-gray-800"
                 htmlFor="contractedAt"
               >
-                契約URL
-              </label>
-              <input
-                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
-                id="url"
-                type="url"
-                placeholder={`${detailSubscription.data?.url || ""}`}
-                ref={urlRef}
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                className="mb-2 block text-sm font-bold text-gray-800"
-                htmlFor="contractedAt"
-              >
                 契約日
               </label>
               <input
@@ -219,10 +203,25 @@ function DetailSubscription() {
             </div>{" "}
             <div className="mb-4">
               <label
+                className="mb-2 block text-sm font-bold text-gray-800"
+                htmlFor="contractedAt"
+              >
+                契約確認URL（任意）
+              </label>
+              <input
+                className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"
+                id="url"
+                type="url"
+                placeholder={`${detailSubscription.data?.url || ""}`}
+                ref={urlRef}
+              />
+            </div>
+            <div className="mb-4">
+              <label
                 htmlFor="emoji"
                 className="mb-2 block text-sm font-bold text-gray-800"
               >
-                イメージ文字
+                イメージ文字（任意）
               </label>
               <input
                 className="focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none"

@@ -43,7 +43,7 @@ export const impression = () => {
     <>
       <Header />
       <main className="flex min-h-screen flex-col  items-center bg-gradient-to-b from-indigo-900 to-indigo-500">
-        <div className="container flex flex-col items-center justify-center gap-8 px-4 py-16 ">
+        <div className="container flex flex-col items-center justify-center gap-8 px-4 py-8">
           <p className="text-lg font-extrabold tracking-tight text-gray-100 sm:text-[2rem]">
             {detailSubscription.data?.name}の感想登録
           </p>
